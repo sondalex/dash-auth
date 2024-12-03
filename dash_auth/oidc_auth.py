@@ -126,14 +126,16 @@ class OIDCAuth(Auth):
         self.oauth = OAuth(app.server)
 
         # Check that the login and callback rules have an <idp> placeholder
-        if not re.findall(r"/<idp>(?=/|$)", login_route):
-            raise Exception(
-                "The login route must contain a <idp> placeholder."
-            )
-        if not re.findall(r"/<idp>(?=/|$)", callback_route):
-            raise Exception(
-                "The callback route must contain a <idp> placeholder."
-            )
+        if not re.findall(r"/\w+/\w+$", login_route):
+            if not re.findall(r"/<idp>(?=/|$)", login_route):
+                raise Exception(
+                    "The login route must contain a <idp> placeholder."
+                )
+        if not re.findall(r"/\w+/\w+$", callback_route):
+            if not re.findall(r"/<idp>(?=/|$)", callback_route):
+                raise Exception(
+                    "The callback route must contain a <idp> placeholder."
+                )
 
         app.server.add_url_rule(
             login_route,
